@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- <link href='http://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'> -->
+        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css'>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'/>
+    </head>
+    <body>
+        <nav>
+            <div class='nav-wrapper pink'>
+                <a href='#' class='brand-logo center'>絵文字つけてくれる君</a>
+            </div>
+        </nav>
+
+        <div class='row'>
+            <form class='col s12'>
+                <div class='row' style='margin-top: 32px;'>
+                    <div class='input-field col s12 m6 offset-m3'>
+                        <textarea id='textarea' class='materialize-textarea' length='100'></textarea>
+                        <label for='textarea'>文章を入力</label>
+                    </div>
+                </div>
+                <div class='row' style='margin-top: 32px;'>
+                    <div class='col s12 m6 offset-m3'>
+                        <a id='emoly-btn' class='waves-effect waves-light btn right col m6 offset-m3 pink'>絵文字つける</a>
+                    </div>
+                </div>
+                <div id='result-container' class='row' style='margin-top: 32px;'>
+                    <div class='col s12 m6 offset-m3'>
+                        <div class='card-panel hoverable center'>
+                            <p id='result-text' style='font-size: 20pt; margin: 0;'></p>
+                            <div id='progressbar' class='preloader-wrapper small active'>
+                                <div class='spinner-layer spinner-green-only'>
+                                    <div class='circle-clipper left'>
+                                        <div class='circle'></div>
+                                    </div><div class='gap-patch'>
+                                        <div class='circle'></div>
+                                    </div><div class='circle-clipper right'>
+                                        <div class='circle'></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id='share-container'></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+        <script src='https://code.jquery.com/jquery-2.2.2.min.js' integrity='sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI=' crossorigin='anonymous'></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js'></script>
+        <script src='/static/index.js'></script>
+    </body>
+</html>
