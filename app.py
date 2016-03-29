@@ -1,6 +1,10 @@
 import config
 from celery import Celery, task
 from flask import Flask, render_template, request
+from gensim.models.word2vec import Word2Vec
+from gensim import matutils
+from numpy import dot
+import MeCab
 
 app = Flask(__name__)
 app.debug = True
@@ -11,6 +15,8 @@ app.config.update(
     CELERY_BROKER_URL=config.celery_broker_url,
     CELERY_RESULT_BACKEND=config.celery_result_url
 )
+
+mecab = MeCab.Tagger('-d %s' % (config.mecab_dic_dir))
 
 def make_celery(app):
     celery = Celery(app.import_name, broker=app.config['CELERY_BROKER_URL'])
@@ -26,9 +32,29 @@ def make_celery(app):
 
 celery = make_celery(app)
 
+all_model = Word2Vec.load_word2vec_format('model/all.txt', binary=False, unicode_errors='ignore')
+emoji_model = Word2Vec.load_word2vec_format('model/emoji.txt', binary=False, unicode_errors='ignore')
+
+def most_sim_vec(model, word=[]):
+    model.init_sims(replace=True)
+    dists = dot(model.syn0norm, word)
+    best = matutils.argsort(dists, topn=1, reverse=True)
+    return model.index2word[best[0]]
+
 @task(name='tasks.emolize')
 def emolize(text):
-    return text + 'おい'
+    result = ''
+    for word in mecab.parse(text).split('\n'):
+        features = word.split('\t')
+        if len(features) < 2:
+            continue
+        result += features[0]
+        try:
+            base = features[1].split(',')[6]
+            result += most_sim_vec(emoji_model, all_model[base])
+        except Exception:
+            pass
+    return result
 
 @app.route('/', methods=['GET'])
 def index():
