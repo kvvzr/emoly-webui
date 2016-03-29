@@ -49,11 +49,14 @@ def emolize(text):
         if len(features) < 2:
             continue
         result += features[0]
-        try:
-            base = features[1].split(',')[6]
-            result += most_sim_vec(emoji_model, all_model[base])
-        except Exception:
-            pass
+        info = features[1].split(',')
+        pos = info[0]
+        if pos in ['名詞', '動詞', '形容詞', '副詞']:
+            try:
+                base = info[6]
+                result += most_sim_vec(emoji_model, all_model[base])
+            except Exception:
+                pass
     return result
 
 @app.route('/', methods=['GET'])
