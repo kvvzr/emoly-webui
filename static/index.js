@@ -14,7 +14,7 @@
                 $('#result-text').html(res.replace(/\n/g,'<br/>'));
                 $('#progressbar').hide();
 
-                var url = "https://twitter.com/intent/tweet?text=" + res;
+                var url = "https://twitter.com/intent/tweet?text=" + res + ' #emoly';
                 $("#share-container").empty().append( '<a class="twitter-share-button" href="' + url + '" data-size="large"> Tweet</a>' );
                 twttr.widgets.load();
             }

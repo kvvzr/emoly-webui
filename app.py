@@ -76,7 +76,6 @@ def result(job_key):
     job = emolize.AsyncResult(job_key)
     ready = job.ready()
     if (ready):
-        print(job.get())
         return str(job.get())
     else:
         return ('', 202)
