@@ -36,11 +36,4 @@
         var data = { text: $('#textarea').val() };
         requestEmoly(data)
     });
-
-    var clipboard = new Clipboard('#result-container');
-
-    clipboard.on('success', function(e) {
-        Materialize.toast('クリップボードにコピーしました', 4000);
-        e.clearSelection();
-    });
 })(this, jQuery);
