@@ -44,19 +44,21 @@ def most_sim_vec(model, word=[]):
 @task(name='tasks.emolize')
 def emolize(text):
     result = ''
-    for word in mecab.parse(text).split('\n'):
-        features = word.split('\t')
-        if len(features) < 2:
-            continue
-        result += features[0]
-        info = features[1].split(',')
-        pos = info[0]
-        if pos in ['名詞', '動詞', '形容詞', '副詞']:
-            try:
-                base = info[6]
-                result += most_sim_vec(emoji_model, all_model[base])
-            except Exception:
-                pass
+    for line in text.split('\n'):
+        for word in mecab.parse(line).split('\n'):
+            features = word.split('\t')
+            if len(features) < 2:
+                continue
+            result += features[0]
+            info = features[1].split(',')
+            pos = info[0]
+            if pos in ['名詞', '動詞', '形容詞', '副詞']:
+                try:
+                    base = info[6]
+                    result += most_sim_vec(emoji_model, all_model[base])
+                except Exception:
+                    pass
+        result += '\n'
     return result
 
 @app.route('/', methods=['GET'])
@@ -74,6 +76,7 @@ def result(job_key):
     job = emolize.AsyncResult(job_key)
     ready = job.ready()
     if (ready):
+        print(job.get())
         return str(job.get())
     else:
         return ('', 202)

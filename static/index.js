@@ -11,7 +11,7 @@
                 }, 500);
             } else if (xhr.status == 200) {
                 $('#result-text').show();
-                $('#result-text').text(res);
+                $('#result-text').html(res.replace(/\n/g,'<br/>'));
                 $('#progressbar').hide();
 
                 var url = "https://twitter.com/intent/tweet?text=" + res;
