@@ -32,6 +32,7 @@
     $('#emoly-btn').click(function() {
         $('#result-text').hide();
         $('#result-container').show();
+        $('#progressbar').show();
 
         var data = { text: $('#textarea').val() };
         requestEmoly(data)
