@@ -1,3 +1,4 @@
 flask
 celery
-mecab-python3
+gensim
+gunicorn
