@@ -44,20 +44,39 @@ def most_sim_vec(model, word=[]):
 # @task(name='tasks.emolize')
 def emolize(text):
     result = ''
+
     for line in text.split('\n'):
+        surfaces = []
+        tokens = []
+        with_emoji = []
+
         for word in mecab.parse(line).split('\n'):
             features = word.split('\t')
             if len(features) < 2:
                 continue
-            result += features[0]
+
             info = features[1].split(',')
             pos = info[0]
-            if pos in ['名詞', '動詞', '形容詞', '副詞']:
-                try:
-                    base = info[6]
-                    result += most_sim_vec(emoji_model, all_model[base])
-                except Exception:
-                    pass
+            token = info[6]
+            if pos in ['助動詞']:
+                surfaces[-1] += features[0]
+            else:
+                surfaces.append(features[0])
+                tokens.append(token)
+                if pos in ['助詞', '記号']:
+                    with_emoji.append(False)
+                else:
+                    with_emoji.append(True);
+
+
+        for i in range(len(tokens)):
+            result += surfaces[i]
+            if not with_emoji[i]:
+                continue
+            try:
+                result += most_sim_vec(emoji_model, all_model[tokens[i]])
+            except Exception:
+                pass
         result += '\n'
     return result
 
