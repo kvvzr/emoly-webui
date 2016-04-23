@@ -5,6 +5,7 @@ from gensim.models.word2vec import Word2Vec
 from gensim import matutils
 from numpy import dot
 import MeCab
+import random
 
 app = Flask(__name__)
 app.debug = True
@@ -38,8 +39,8 @@ emoji_model = Word2Vec.load_word2vec_format('model/emoji.txt', binary=False, uni
 def most_sim_vec(model, word=[]):
     model.init_sims(replace=True)
     dists = dot(model.syn0norm, word)
-    best = matutils.argsort(dists, topn=1, reverse=True)
-    return model.index2word[best[0]]
+    best = matutils.argsort(dists, topn=3, reverse=True)
+    return model.index2word[random.choice(best)]
 
 # @task(name='tasks.emolize')
 def emolize(text):
