@@ -47,40 +47,42 @@ def emolize(text):
     result = ''
 
     for line in text.split('\n'):
-        surfaces = []
-        tokens = []
-        with_emoji = []
+        for segment in line.split(' '):
+            surfaces = []
+            tokens = []
+            with_emoji = []
 
-        for word in mecab.parse(line).split('\n'):
-            features = word.split('\t')
-            if len(features) < 2:
-                continue
+            for word in mecab.parse(segment).split('\n'):
+                features = word.split('\t')
+                if len(features) < 2:
+                    continue
 
-            info = features[1].split(',')
-            pos = info[0]
-            pos2 = info[1]
-            token = info[6]
-            if surfaces and (pos in ['助動詞'] or pos2 in ['非自立', '接続助詞', '終助詞']):
-                surfaces[-1] += features[0]
-            else:
-                surfaces.append(features[0])
-                if info[6] == '*':
-                    tokens.append(features[0])
+                info = features[1].split(',')
+                pos = info[0]
+                pos2 = info[1]
+                token = info[6]
+                if surfaces and (pos in ['助動詞'] or pos2 in ['非自立', '接続助詞', '終助詞']):
+                    surfaces[-1] += features[0]
                 else:
-                    tokens.append(token)
-                if pos in ['助詞', '記号', '接頭詞']:
-                    with_emoji.append(False)
-                else:
-                    with_emoji.append(True);
+                    surfaces.append(features[0])
+                    if info[6] == '*':
+                        tokens.append(features[0])
+                    else:
+                        tokens.append(token)
+                    if pos in ['助詞', '記号', '接頭詞']:
+                        with_emoji.append(False)
+                    else:
+                        with_emoji.append(True);
 
-        for i in range(len(tokens)):
-            result += surfaces[i]
-            if not with_emoji[i]:
-                continue
-            try:
-                result += most_sim_vec(emoji_model, all_model[tokens[i]])
-            except Exception:
-                pass
+            for i in range(len(tokens)):
+                result += surfaces[i]
+                if not with_emoji[i]:
+                    continue
+                try:
+                    result += most_sim_vec(emoji_model, all_model[tokens[i]])
+                except Exception:
+                    pass
+            result += ' '
         result += '\n'
     return result
 
