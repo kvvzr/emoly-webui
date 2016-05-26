@@ -51,8 +51,10 @@ def emolize(text):
             surfaces = []
             tokens = []
             with_emoji = []
+            poss = []
 
             for word in mecab.parse(segment).split('\n'):
+                print(word)
                 features = word.split('\t')
                 if len(features) < 2:
                     continue
@@ -61,7 +63,7 @@ def emolize(text):
                 pos = info[0]
                 pos2 = info[1]
                 token = info[6]
-                if surfaces and (pos in ['助動詞'] or pos2 in ['非自立', '接続助詞', '終助詞']):
+                if surfaces and (pos in ['助動詞'] or pos2 in ['非自立', '接続助詞', '終助詞', '接尾'] or (poss and poss[-1] in ['動詞', '形容詞', '副詞'] and (pos in ['名詞']))):
                     surfaces[-1] += features[0]
                 else:
                     surfaces.append(features[0])
@@ -73,6 +75,7 @@ def emolize(text):
                         with_emoji.append(False)
                     else:
                         with_emoji.append(True);
+                    poss.append(pos)
 
             for i in range(len(tokens)):
                 result += surfaces[i]
