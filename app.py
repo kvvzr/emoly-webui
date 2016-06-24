@@ -54,7 +54,6 @@ def emolize(text):
             poss = []
 
             for word in mecab.parse(segment).split('\n'):
-                print(word)
                 features = word.split('\t')
                 if len(features) < 2:
                     continue
@@ -82,7 +81,7 @@ def emolize(text):
                 if not with_emoji[i]:
                     continue
                 try:
-                    result += most_sim_vec(emoji_model, all_model[tokens[i]])
+                    result += most_sim_vec(emoji_model, all_model[tokens[i].lower()])
                 except Exception:
                     pass
             result += ' '
